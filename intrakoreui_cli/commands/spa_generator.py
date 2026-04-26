@@ -155,7 +155,6 @@ export default {
 		)
 
 	def link_controller_files(self):
-		# Link controller files in main.js/main.ts
 		print("Linking controller files...")
 		main_js: Path = self.app_path / (
 			f"{self.spa_name}/src/main.ts"
@@ -167,11 +166,13 @@ export default {
 			with main_js.open("w") as f:
 				boilerplate = MAIN_JS_BOILERPLATE
 				
+				# Add Intrakore UI CSS import
+				boilerplate = "import 'intrakore-ui/style.css';\n" + boilerplate
+				
 				# Replace FrappeUI with IntrakoreUI
 				boilerplate = boilerplate.replace('frappe-ui', 'intrakore-ui')
 				boilerplate = boilerplate.replace('FrappeUI', 'IntrakoreUI')
 
-				# Add css import
 				if self.add_tailwindcss:
 					boilerplate = "import './index.css';\n" + boilerplate
 
