@@ -86,18 +86,16 @@ class SPAGenerator:
 		# Update tailwind.config.js with Intrakore UI paths
 		tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
 		if tailwind_config_path.exists():
-			new_config = '''/** @type {import('tailwindcss').Config} */
+			new_config = '''// tailwind.config.js in your SPA
+/** @type {import('tailwindcss').Config} */
 export default {
-  presets: [
-    require('intrakore-ui/src/utils/tailwind.config')
-  ],
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
     './node_modules/intrakore-ui/src/**/*.{vue,js,ts,jsx,tsx}'
   ],
   theme: {
-    extend: {},
+    extend: {},  // No preset needed - use tokens.css
   },
   plugins: [],
 }
@@ -155,6 +153,7 @@ export default {
 		)
 
 	def link_controller_files(self):
+		# Link controller files in main.js/main.ts
 		print("Linking controller files...")
 		main_js: Path = self.app_path / (
 			f"{self.spa_name}/src/main.ts"
@@ -166,13 +165,11 @@ export default {
 			with main_js.open("w") as f:
 				boilerplate = MAIN_JS_BOILERPLATE
 				
-				# Add Intrakore UI CSS import
-				boilerplate = "import 'intrakore-ui/style.css';\n" + boilerplate
-				
 				# Replace FrappeUI with IntrakoreUI
 				boilerplate = boilerplate.replace('frappe-ui', 'intrakore-ui')
 				boilerplate = boilerplate.replace('FrappeUI', 'IntrakoreUI')
 
+				# Add css import
 				if self.add_tailwindcss:
 					boilerplate = "import './index.css';\n" + boilerplate
 

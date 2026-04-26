@@ -1,86 +1,303 @@
 APP_VUE_BOILERPLATE = """<template>
-	<div>
-		<button v-if="$auth.isLoggedIn" @click="$auth.logout()">Logout</button>
-		<router-view />
-	</div>
+  <div class="min-h-screen" :style="{ backgroundColor: 'var(--surface-gray-1)' }">
+    <!-- Navigation Bar -->
+    <div class="border-b" :style="{ backgroundColor: 'var(--surface-white)', borderColor: 'var(--outline-gray-1)' }">
+      <div class="px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold" :style="{ color: 'var(--ink-blueprint-4)' }">
+          Intrakore CRM
+        </h1>
+        <Button 
+          v-if="$auth.isLoggedIn" 
+          @click="$auth.logout()"
+          variant="ghost"
+          size="sm"
+        >
+          <template #prefix>
+            <FeatherIcon name="log-out" class="w-4 h-4" />
+          </template>
+          Logout
+        </Button>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="p-6">
+      <router-view />
+    </div>
+  </div>
 </template>
 
-
 <script>
+import { Button, FeatherIcon } from 'intrakore-ui'
+
 export default {
-	inject: ['$auth']
+  components: { Button, FeatherIcon },
+  inject: ['$auth']
 };
 </script>
 """
 
 HOME_VUE_BOILERPLATE = """<template>
-  <div>
-	<h1>Home Page</h1>
-	<!-- Fetch the resource on click -->
-	<button @click="$resources.ping.fetch()">Ping</button>
+  <div class="max-w-7xl mx-auto">
+    <!-- Welcome Section -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">Home Page</h1>
+      <p class="mt-2" :style="{ color: 'var(--ink-gray-5)' }">Welcome to your Intrakore dashboard</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <Card>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Total Leads</div>
+            <FeatherIcon name="users" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+          </div>
+          <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
+          <Badge theme="success" size="sm" class="mt-2">+12% this month</Badge>
+        </div>
+      </Card>
+      
+      <Card>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Active Deals</div>
+            <FeatherIcon name="briefcase" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+          </div>
+          <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
+          <Progress :value="65" size="sm" class="mt-2" />
+        </div>
+      </Card>
+      
+      <Card>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Tasks Due</div>
+            <FeatherIcon name="check-square" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+          </div>
+          <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
+        </div>
+      </Card>
+      
+      <Card>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Conversion Rate</div>
+            <FeatherIcon name="trending-up" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+          </div>
+          <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0%</div>
+          <Rating :value="0" :max="5" size="sm" class="mt-2" />
+        </div>
+      </Card>
+    </div>
+
+    <!-- Connection Test Section -->
+    <Card class="mb-8">
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-2" :style="{ color: 'var(--ink-gray-8)' }">Test Backend Connection</h3>
+        <p class="mb-4" :style="{ color: 'var(--ink-gray-5)' }">Click the button to test connection to your Frappe backend.</p>
+        
+        <Button 
+          @click="$resources.ping.fetch()"
+          :loading="$resources.ping.loading"
+          variant="solid"
+          theme="primary"
+        >
+          <template #prefix>
+            <FeatherIcon name="activity" class="w-4 h-4" />
+          </template>
+          {{ $resources.ping.loading ? 'Connecting...' : 'Test Connection' }}
+        </Button>
+
+        <div v-if="$resources.ping.data" class="mt-4">
+          <Alert title="Connected Successfully" theme="success" closable>
+            Server response: {{ $resources.ping.data }}
+          </Alert>
+        </div>
+
+        <div v-if="$resources.ping.error" class="mt-4">
+          <Alert title="Connection Failed" theme="error" closable>
+            {{ $resources.ping.error }}
+          </Alert>
+        </div>
+      </div>
+    </Card>
+
+    <!-- Quick Actions -->
+    <Card>
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-4" :style="{ color: 'var(--ink-gray-8)' }">Quick Actions</h3>
+        <div class="flex flex-wrap gap-3">
+          <Button variant="outline">
+            <template #prefix>
+              <FeatherIcon name="user-plus" class="w-4 h-4" />
+            </template>
+            Add Lead
+          </Button>
+          <Button variant="outline">
+            <template #prefix>
+              <FeatherIcon name="file-text" class="w-4 h-4" />
+            </template>
+            Generate Report
+          </Button>
+          <Button variant="outline">
+            <template #prefix>
+              <FeatherIcon name="settings" class="w-4 h-4" />
+            </template>
+            Settings
+          </Button>
+        </div>
+      </div>
+    </Card>
   </div>
 </template>
 
 <script>
+import { 
+  Card, 
+  Button, 
+  Alert, 
+  Badge, 
+  Progress,
+  Rating,
+  FeatherIcon
+} from 'intrakore-ui'
+
 export default {
+  name: 'HomePage',
+  components: {
+    Card,
+    Button,
+    Alert,
+    Badge,
+    Progress,
+    Rating,
+    FeatherIcon
+  },
   resources: {
-	ping() {
-	  return {
-		method: "frappe.ping", // Method to call on backend
-		onSuccess(d) {
-		  alert(d);
-		},
-	  };
-	},
+    ping() {
+      return {
+        method: "frappe.ping",
+        onSuccess(data) {
+          console.log("Ping successful:", data);
+        },
+        onError(error) {
+          console.error("Ping failed:", error);
+        },
+      };
+    },
   },
 };
 </script>
 """
 
 LOGIN_VUE_BOILERPLATE = """<template>
-  <div class="min-h-screen bg-white flex">
-	<div class="mx-auto w-full max-w-sm lg:w-96">
-	  <form @submit.prevent="login" class="space-y-6">
-		<label for="email"> Username: </label>
-		<input type="text" v-model="email" />
-		<br />
-		<label for="password"> Password: </label>
-		<input type="password" v-model="password" />
+  <div class="min-h-screen flex items-center justify-center" :style="{ backgroundColor: 'var(--surface-gray-1)' }">
+    <Card class="w-full max-w-md">
+      <div class="p-8">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">Welcome Back</h2>
+          <p class="mt-2" :style="{ color: 'var(--ink-gray-5)' }">Sign in to your account</p>
+        </div>
 
-		<button
-		  class="bg-blue-500 block text-white p-2 hover:bg-blue-700"
-		  type="submit"
-		>
-		  Sign in
-		</button>
-	  </form>
-	</div>
+        <form @submit.prevent="login" class="space-y-6">
+          <div>
+            <FormLabel label="Username" required />
+            <TextInput 
+              v-model="email" 
+              placeholder="Enter your username"
+              size="md"
+              block
+            />
+          </div>
+
+          <div>
+            <FormLabel label="Password" required />
+            <TextInput 
+              v-model="password" 
+              type="password"
+              placeholder="Enter your password"
+              size="md"
+              block
+            />
+          </div>
+
+          <Button 
+            type="submit"
+            variant="solid"
+            theme="primary"
+            block
+            :loading="loading"
+          >
+            <template #prefix>
+              <FeatherIcon name="log-in" class="w-4 h-4" />
+            </template>
+            Sign In
+          </Button>
+        </form>
+
+        <div v-if="errorMessage" class="mt-4">
+          <Alert theme="error" size="sm">
+            {{ errorMessage }}
+          </Alert>
+        </div>
+      </div>
+    </Card>
   </div>
 </template>
+
 <script>
+import { Card, Button, FormLabel, TextInput, Alert, FeatherIcon } from 'intrakore-ui'
+
 export default {
+  name: 'LoginPage',
+  components: {
+    Card,
+    Button,
+    FormLabel,
+    TextInput,
+    Alert,
+    FeatherIcon
+  },
   data() {
-	return {
-	  email: null,
-	  password: null,
-	};
+    return {
+      email: null,
+      password: null,
+      loading: false,
+      errorMessage: null,
+      redirect_route: null
+    };
   },
   inject: ["$auth"],
   async mounted() {
-	if (this.$route?.query?.route) {
-	  this.redirect_route = this.$route.query.route;
-	  this.$router.replace({ query: null });
-	}
+    if (this.$route?.query?.route) {
+      this.redirect_route = this.$route.query.route;
+      this.$router.replace({ query: null });
+    }
   },
   methods: {
-	async login() {
-	  if (this.email && this.password) {
-		let res = await this.$auth.login(this.email, this.password);
-		if (res) {
-		  this.$router.push({ name: "Home" });
-		}
-	  }
-	},
+    async login() {
+      if (!this.email || !this.password) {
+        this.errorMessage = 'Please enter username and password';
+        return;
+      }
+      
+      this.loading = true;
+      this.errorMessage = null;
+      
+      try {
+        let res = await this.$auth.login(this.email, this.password);
+        if (res) {
+          this.$router.push({ name: "Home" });
+        } else {
+          this.errorMessage = 'Invalid username or password';
+        }
+      } catch (error) {
+        this.errorMessage = error.message || 'Login failed';
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
@@ -89,16 +306,18 @@ export default {
 VUE_VITE_CONFIG_BOILERPLATE = """import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import proxyOptions from './proxyOptions';
+import intrakoreui from 'intrakore-ui/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [vue()],
-	server: {
-		port: 8080,
-		host: '0.0.0.0',
-		proxy: proxyOptions
-	},
+	plugins: [
+		intrakoreui({
+			frappeProxy: true,
+			jinjaBootData: true,
+			lucideIcons: true,
+		}),
+		vue()
+	],
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, 'src')
@@ -108,6 +327,9 @@ export default defineConfig({
 		outDir: '../{{app}}/public/{{name}}',
 		emptyOutDir: true,
 		target: 'es2015',
+	},
+	optimizeDeps: {
+		include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client'],
 	},
 });
 """
@@ -129,6 +351,7 @@ export default {
 
 MAIN_JS_BOILERPLATE = """import { createApp, reactive } from "vue";
 import App from "./App.vue";
+import 'intrakore-ui/tokens.css';
 
 import router from './router';
 import resourceManager from "../../../intrakoreui_cli/libs/resourceManager";
@@ -150,7 +373,7 @@ app.provide("$call", call);
 app.provide("$socket", socket);
 
 
-// Configure route gaurds
+// Configure route guards
 router.beforeEach(async (to, from, next) => {
 	if (to.matched.some((record) => !record.meta.isLoginPage)) {
 		// this route requires auth, check if logged in
