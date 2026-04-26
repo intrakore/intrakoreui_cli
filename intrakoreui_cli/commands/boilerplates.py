@@ -51,7 +51,7 @@ HOME_VUE_BOILERPLATE = """<template>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Total Leads</div>
-            <FeatherIcon name="users" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+            <FeatherIcon name="users" class="w-4 h-4" :style="{ color: 'var(--ink-gray-4)' }" />
           </div>
           <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
           <Badge theme="success" size="sm" class="mt-2">+12% this month</Badge>
@@ -62,7 +62,7 @@ HOME_VUE_BOILERPLATE = """<template>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Active Deals</div>
-            <FeatherIcon name="briefcase" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+            <FeatherIcon name="briefcase" class="w-4 h-4" :style="{ color: 'var(--ink-gray-4)' }" />
           </div>
           <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
           <Progress :value="65" size="sm" class="mt-2" />
@@ -73,7 +73,7 @@ HOME_VUE_BOILERPLATE = """<template>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Tasks Due</div>
-            <FeatherIcon name="check-square" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+            <FeatherIcon name="check-square" class="w-4 h-4" :style="{ color: 'var(--ink-gray-4)' }" />
           </div>
           <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0</div>
         </div>
@@ -83,7 +83,7 @@ HOME_VUE_BOILERPLATE = """<template>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm" :style="{ color: 'var(--ink-gray-5)' }">Conversion Rate</div>
-            <FeatherIcon name="trending-up" size="16" :style="{ color: 'var(--ink-gray-4)' }" />
+            <FeatherIcon name="trending-up" class="w-4 h-4" :style="{ color: 'var(--ink-gray-4)' }" />
           </div>
           <div class="text-2xl font-bold" :style="{ color: 'var(--ink-gray-9)' }">0%</div>
           <Rating :value="0" :max="5" size="sm" class="mt-2" />
@@ -308,10 +308,6 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import intrakoreui from 'intrakore-ui/vite';
 
-// Auto-detect app and spa names from directory structure
-const appName = path.basename(path.resolve(__dirname, '../..'));
-const spaName = path.basename(__dirname);
-
 export default defineConfig({
   plugins: [
     intrakoreui({
@@ -319,8 +315,8 @@ export default defineConfig({
       jinjaBootData: true,
       lucideIcons: true,
       buildConfig: {
-        outDir: `../${appName}/public/${spaName}`,
-        indexHtmlPath: `../${appName}/www/${spaName}.html`,
+        outDir: '../{{app}}/public/{{name}}',
+        indexHtmlPath: '../{{app}}/www/{{name}}.html',
         emptyOutDir: true,
         sourcemap: true,
       },
@@ -333,12 +329,12 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: `../${appName}/public/${spaName}`,
+    outDir: '../{{app}}/public/{{name}}',
     emptyOutDir: true,
     target: 'es2015',
   },
   optimizeDeps: {
-    include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client'],
+    include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client', 'lucide-vue-next'],
   },
 });
 """
@@ -445,10 +441,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import intrakoreui from 'intrakore-ui/vite';
 
-// Auto-detect app and spa names from directory structure
-const appName = path.basename(path.resolve(__dirname, '../..'));
-const spaName = path.basename(__dirname);
-
 export default defineConfig({
   plugins: [
     intrakoreui({
@@ -456,8 +448,8 @@ export default defineConfig({
       jinjaBootData: true,
       lucideIcons: true,
       buildConfig: {
-        outDir: `../${appName}/public/${spaName}`,
-        indexHtmlPath: `../${appName}/www/${spaName}.html`,
+        outDir: '../{{app}}/public/{{name}}',
+        indexHtmlPath: '../{{app}}/www/{{name}}.html',
         emptyOutDir: true,
         sourcemap: true,
       },
@@ -470,12 +462,12 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: `../${appName}/public/${spaName}`,
+    outDir: '../{{app}}/public/{{name}}',
     emptyOutDir: true,
     target: 'es2015',
   },
   optimizeDeps: {
-    include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client'],
+    include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client', 'lucide-react'],
   },
 });
 """
