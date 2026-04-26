@@ -308,7 +308,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import intrakoreui from 'intrakore-ui/vite';
 
-// Get dynamic app and spa names from the directory structure
+// Auto-detect app and spa names from directory structure
 const appName = path.basename(path.resolve(__dirname, '../..'));
 const spaName = path.basename(__dirname);
 
@@ -442,10 +442,10 @@ AUTH_ROUTES_BOILERPLATE = """export default [
 
 REACT_VITE_CONFIG_BOILERPLATE = """import path from 'path';
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import react from '@vitejs/plugin-react';
 import intrakoreui from 'intrakore-ui/vite';
 
-// Get dynamic app and spa names from the directory structure
+// Auto-detect app and spa names from directory structure
 const appName = path.basename(path.resolve(__dirname, '../..'));
 const spaName = path.basename(__dirname);
 
@@ -462,7 +462,7 @@ export default defineConfig({
         sourcemap: true,
       },
     }),
-    vue(),
+    react(),
   ],
   resolve: {
     alias: {
