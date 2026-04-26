@@ -1,4 +1,4 @@
-# Doppio
+# IntrakoreUICLI
 
 A Frappe App to setup and manage single page applications and custom desk pages (using Vue 3 or React) on your custom Frappe App.
 
@@ -10,7 +10,7 @@ In your bench directory:
 bench get-app https://github.com/intrakore/intrakoreui_cli
 ```
 
-This will install the `Doppio` frappe app on your bench and enable some custom bench CLI commands
+This will install the `IntrakoreUICLI` frappe app on your bench and enable some custom bench CLI commands
 that will ease the process of attaching a SPA to your Frappe Application.
 
 ## Setting Up React/Vue SPA

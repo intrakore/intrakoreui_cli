@@ -3,10 +3,10 @@ from frappe import _
 def get_data():
 	return [
 		{
-			"module_name": "Doppio",
+			"module_name": "IntrakoreUICLI",
 			"color": "grey",
 			"icon": "octicon octicon-file-directory",
 			"type": "module",
-			"label": _("Doppio")
+			"label": _("IntrakoreUICLI")
 		}
 	]
