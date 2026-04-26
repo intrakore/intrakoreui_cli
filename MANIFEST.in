@@ -1,0 +1,17 @@
+include MANIFEST.in
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include intrakoreui_cli *.css
+recursive-include intrakoreui_cli *.csv
+recursive-include intrakoreui_cli *.html
+recursive-include intrakoreui_cli *.ico
+recursive-include intrakoreui_cli *.js
+recursive-include intrakoreui_cli *.json
+recursive-include intrakoreui_cli *.md
+recursive-include intrakoreui_cli *.png
+recursive-include intrakoreui_cli *.py
+recursive-include intrakoreui_cli *.svg
+recursive-include intrakoreui_cli *.txt
+recursive-exclude intrakoreui_cli *.pyc

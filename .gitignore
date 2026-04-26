@@ -1,0 +1,14 @@
+.DS_Store
+*.pyc
+*.egg-info
+*.swp
+tags
+intrakoreui_cli/docs/current
+node_modules/
+
+intrakoreui_cli/docs/current
+intrakoreui_cli/public/vision
+intrakoreui_cli/www/vision.html
+intrakoreui_cli/public/css/email.css
+vision/tailwind.theme.json
+vision/dist/assets

@@ -1,0 +1,27 @@
+{
+  "name": "intrakoreui_cli",
+  "version": "0.0.1",
+  "description": "A dream.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intrakore/intrakoreui_cli.git"
+  },
+  "keywords": [
+    "intrakoreui_cli"
+  ],
+  "author": "Yaseen Sayyed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/intrakore/intrakoreui_cli/issues"
+  },
+  "homepage": "https://github.com/intrakore/intrakoreui_cli#readme",
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.1",
+    "vue": "^3.5.12"
+  }
+}
