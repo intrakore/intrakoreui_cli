@@ -5,7 +5,6 @@ from .spa_generator import SPAGenerator
 from frappe.commands import get_site, pass_context
 from .intrakore_ui import add_intrakore_ui
 from .desk_page import setup_desk_page
-from .update_spa import update_spa  # Add this line
 
 
 @click.command("add-spa")
@@ -57,5 +56,4 @@ def add_desk_page(context, app, page_name, starter):
         frappe.destroy()
 
 
-# Add update_spa to the commands list
-commands = [generate_spa, add_intrakore_ui, add_desk_page, update_spa]
+commands = [generate_spa, add_intrakore_ui, add_desk_page]

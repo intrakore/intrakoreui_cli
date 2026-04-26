@@ -58,48 +58,52 @@ class SPAGenerator:
 		click.echo(f"Run: cd {self.spa_path.absolute().resolve()} && npm run dev")
 		click.echo("to start the development server and visit: http://<site>:8080")
 
-	def setup_tailwindcss(self):
-		# TODO: Convert to yarn command
-		# npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
-		# Install Tailwind CSS v3 (v4 has breaking changes with init command)
-		subprocess.run(
-			[
-				"npm",
-				"install",
-				"-D",
-				"tailwindcss@^3.4",
-				"postcss@latest",
-				"autoprefixer@latest",
-			],
-			cwd=self.spa_path,
-		)
+def setup_tailwindcss(self):
+    # Install Tailwind CSS v3
+    subprocess.run(
+        [
+            "npm",
+            "install",
+            "-D",
+            "tailwindcss@^3.4",
+            "postcss@latest",
+            "autoprefixer@latest",
+        ],
+        cwd=self.spa_path,
+    )
 
-		# npx tailwindcss init -p
-		subprocess.run(["npx", "tailwindcss", "init", "-p"], cwd=self.spa_path)
+    # Initialize tailwind config
+    subprocess.run(["npx", "tailwindcss", "init", "-p"], cwd=self.spa_path)
 
-		# Create an index.css file
-		index_css_path: Path = self.spa_path / "src/index.css"
-
-		# Add boilerplate code
-		INDEX_CSS_BOILERPLATE = """@tailwind base;
+    # Create an index.css file with Tailwind directives
+    index_css_path: Path = self.spa_path / "src/index.css"
+    INDEX_CSS_BOILERPLATE = """@tailwind base;
 @tailwind components;
 @tailwind utilities;
-	"""
+"""
+    create_file(index_css_path, INDEX_CSS_BOILERPLATE)
 
-		create_file(index_css_path, INDEX_CSS_BOILERPLATE)
-
-		# Populate content property in tailwind config file
-		# the extension of config can be .js or .ts, so we need to check for both
-		tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
-		if not tailwind_config_path.exists():
-			tailwind_config_path = self.spa_path / "tailwind.config.ts"
-
-		tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
-		tailwind_config = tailwind_config_path.read_text()
-		tailwind_config = tailwind_config.replace(
-			"content: [],", 'content: ["./src/**/*.{html,jsx,tsx,vue,js,ts}"],'
-		)
-		tailwind_config_path.write_text(tailwind_config)
+    # Update tailwind.config.js with Intrakore UI paths
+    tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
+    if tailwind_config_path.exists():
+        new_config = '''/** @type {import('tailwindcss').Config} */
+export default {
+  presets: [
+    require('intrakore-ui/src/utils/tailwind.config')
+  ],
+  content: [
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './node_modules/intrakore-ui/src/**/*.{vue,js,ts,jsx,tsx}'
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+'''
+        tailwind_config_path.write_text(new_config)
+        click.echo("  ✅ Tailwind config updated with Intrakore UI paths")
 
 	def create_vue_files(self):
 		app_vue = self.spa_path / "src/App.vue"
@@ -162,6 +166,10 @@ class SPAGenerator:
 		if main_js.exists():
 			with main_js.open("w") as f:
 				boilerplate = MAIN_JS_BOILERPLATE
+				
+				# Replace FrappeUI with IntrakoreUI
+				boilerplate = boilerplate.replace('frappe-ui', 'intrakore-ui')
+				boilerplate = boilerplate.replace('FrappeUI', 'IntrakoreUI')
 
 				# Add css import
 				if self.add_tailwindcss:
@@ -171,7 +179,7 @@ class SPAGenerator:
 		else:
 			click.echo("src/main.js not found!")
 			return
-
+			
 	def setup_proxy_options(self):
 		# Setup proxy options file
 		proxy_options_file: Path = self.spa_path / (
