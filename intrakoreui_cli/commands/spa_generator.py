@@ -88,6 +88,9 @@ class SPAGenerator:
 		if tailwind_config_path.exists():
 			new_config = '''/** @type {import('tailwindcss').Config} */
 export default {
+  presets: [
+    require('intrakore-ui/src/utils/tailwind.config')
+  ],
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -101,7 +104,7 @@ export default {
 '''
 			tailwind_config_path.write_text(new_config)
 			click.echo("  ✅ Tailwind config updated with Intrakore UI paths")
-			
+
 	def create_vue_files(self):
 		app_vue = self.spa_path / "src/App.vue"
 		create_file(app_vue, APP_VUE_BOILERPLATE)
