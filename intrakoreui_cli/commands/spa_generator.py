@@ -58,39 +58,36 @@ class SPAGenerator:
 		click.echo(f"Run: cd {self.spa_path.absolute().resolve()} && npm run dev")
 		click.echo("to start the development server and visit: http://<site>:8080")
 
-def setup_tailwindcss(self):
-    # Install Tailwind CSS v3
-    subprocess.run(
-        [
-            "npm",
-            "install",
-            "-D",
-            "tailwindcss@^3.4",
-            "postcss@latest",
-            "autoprefixer@latest",
-        ],
-        cwd=self.spa_path,
-    )
+	def setup_tailwindcss(self):
+		# Install Tailwind CSS v3
+		subprocess.run(
+			[
+				"npm",
+				"install",
+				"-D",
+				"tailwindcss@^3.4",
+				"postcss@latest",
+				"autoprefixer@latest",
+			],
+			cwd=self.spa_path,
+		)
 
-    # Initialize tailwind config
-    subprocess.run(["npx", "tailwindcss", "init", "-p"], cwd=self.spa_path)
+		# Initialize tailwind config
+		subprocess.run(["npx", "tailwindcss", "init", "-p"], cwd=self.spa_path)
 
-    # Create an index.css file with Tailwind directives
-    index_css_path: Path = self.spa_path / "src/index.css"
-    INDEX_CSS_BOILERPLATE = """@tailwind base;
+		# Create an index.css file with Tailwind directives
+		index_css_path: Path = self.spa_path / "src/index.css"
+		INDEX_CSS_BOILERPLATE = """@tailwind base;
 @tailwind components;
 @tailwind utilities;
 """
-    create_file(index_css_path, INDEX_CSS_BOILERPLATE)
+		create_file(index_css_path, INDEX_CSS_BOILERPLATE)
 
-    # Update tailwind.config.js with Intrakore UI paths
-    tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
-    if tailwind_config_path.exists():
-        new_config = '''/** @type {import('tailwindcss').Config} */
+		# Update tailwind.config.js with Intrakore UI paths
+		tailwind_config_path: Path = self.spa_path / "tailwind.config.js"
+		if tailwind_config_path.exists():
+			new_config = '''/** @type {import('tailwindcss').Config} */
 export default {
-  presets: [
-    require('intrakore-ui/src/utils/tailwind.config')
-  ],
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -102,9 +99,9 @@ export default {
   plugins: [],
 }
 '''
-        tailwind_config_path.write_text(new_config)
-        click.echo("  ✅ Tailwind config updated with Intrakore UI paths")
-
+			tailwind_config_path.write_text(new_config)
+			click.echo("  ✅ Tailwind config updated with Intrakore UI paths")
+			
 	def create_vue_files(self):
 		app_vue = self.spa_path / "src/App.vue"
 		create_file(app_vue, APP_VUE_BOILERPLATE)
