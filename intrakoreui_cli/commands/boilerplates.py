@@ -357,7 +357,6 @@ export default {
 MAIN_JS_BOILERPLATE = """import { createApp, reactive } from "vue";
 import App from "./App.vue";
 import 'intrakore-ui/tokens.css';
-import { IntrakoreUI } from "intrakore-ui";
 
 import router from './router';
 import resourceManager from "../../../intrakoreui_cli/libs/resourceManager";
@@ -371,8 +370,6 @@ const auth = reactive(new Auth());
 // Plugins
 app.use(router);
 app.use(resourceManager);
-app.use(IntrakoreUI);
-
 
 // Global Properties,
 // components can inject this
