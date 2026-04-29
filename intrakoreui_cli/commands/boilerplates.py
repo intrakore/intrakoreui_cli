@@ -921,35 +921,28 @@ AUTH_ROUTES_BOILERPLATE = """export default [
 REACT_VITE_CONFIG_BOILERPLATE = """import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import intrakoreui from 'intrakore-ui/vite';
 
 export default defineConfig({
-  plugins: [
-    intrakoreui({
-      frappeProxy: true,
-      jinjaBootData: true,
-      lucideIcons: true,
-      buildConfig: {
-        outDir: '../{{app}}/public/{{name}}',
-        indexHtmlPath: '../{{app}}/www/{{name}}.html',
-        emptyOutDir: true,
-        sourcemap: true,
-      },
-    }),
-    react(),
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  server: {
+    port: 8080,
+    host: '0.0.0.0',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
     },
   },
   build: {
     outDir: '../{{app}}/public/{{name}}',
     emptyOutDir: true,
     target: 'es2015',
-  },
-  optimizeDeps: {
-    include: ['intrakore-ui > feather-icons', 'showdown', 'engine.io-client', 'lucide-react'],
   },
 });
 """
