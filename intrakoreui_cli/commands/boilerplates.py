@@ -1,3 +1,249 @@
+# React Boilerplates (Add these to your file)
+
+APP_REACT_BOILERPLATE_FULL = """import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { IntrakoreProvider, useAuth } from 'intrakore-ui';
+import Home from './views/Home';
+import Login from './views/Login';
+import './index.css';
+
+function AppContent() {
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--surface-gray-1)' }}>
+      <div className="border-b" style={{ backgroundColor: 'var(--surface-white)', borderColor: 'var(--outline-gray-1)' }}>
+        <div className="px-6 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--ink-blueprint-4)' }}>
+            Intrakore App
+          </h1>
+          {isLoggedIn && (
+            <button
+              onClick={logout}
+              className="px-3 py-1 text-sm rounded hover:bg-gray-100"
+              style={{ color: 'var(--ink-gray-6)' }}
+            >
+              Logout
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="p-6">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <IntrakoreProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </IntrakoreProvider>
+  );
+}
+
+export default App;
+"""
+
+HOME_REACT_BOILERPLATE = """import { useState } from 'react';
+import { Card, Button, Alert, Badge, Progress, Rating, FeatherIcon, useFrappeCall } from 'intrakore-ui';
+
+export default function Home() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const testConnection = async () => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const response = await fetch('/api/method/frappe.ping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      setResult({ success: true, message: data.message || 'Connected successfully!' });
+    } catch (error) {
+      setResult({ success: false, message: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>Home Page</h1>
+        <p className="mt-2" style={{ color: 'var(--ink-gray-5)' }}>Welcome to your Intrakore dashboard</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm" style={{ color: 'var(--ink-gray-5)' }}>Total Leads</div>
+              <FeatherIcon name="users" className="w-4 h-4" style={{ color: 'var(--ink-gray-4)' }} />
+            </div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>0</div>
+            <Badge theme="success" size="sm" className="mt-2">+12% this month</Badge>
+          </div>
+        </Card>
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm" style={{ color: 'var(--ink-gray-5)' }}>Active Deals</div>
+              <FeatherIcon name="briefcase" className="w-4 h-4" style={{ color: 'var(--ink-gray-4)' }} />
+            </div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>0</div>
+            <Progress value={65} size="sm" className="mt-2" />
+          </div>
+        </Card>
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm" style={{ color: 'var(--ink-gray-5)' }}>Tasks Due</div>
+              <FeatherIcon name="check-square" className="w-4 h-4" style={{ color: 'var(--ink-gray-4)' }} />
+            </div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>0</div>
+          </div>
+        </Card>
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm" style={{ color: 'var(--ink-gray-5)' }}>Conversion Rate</div>
+              <FeatherIcon name="trending-up" className="w-4 h-4" style={{ color: 'var(--ink-gray-4)' }} />
+            </div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>0%</div>
+            <Rating value={0} max={5} size="sm" className="mt-2" />
+          </div>
+        </Card>
+      </div>
+
+      <Card className="mb-8">
+        <div className="p-6">
+          <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--ink-gray-8)' }}>Test Backend Connection</h3>
+          <p className="mb-4" style={{ color: 'var(--ink-gray-5)' }}>Click the button to test connection to your Frappe backend.</p>
+          <Button onClick={testConnection} loading={loading} variant="solid" theme="primary">
+            <FeatherIcon name="activity" className="w-4 h-4 mr-2" />
+            {loading ? 'Connecting...' : 'Test Connection'}
+          </Button>
+          {result && (
+            <div className="mt-4">
+              <Alert title={result.success ? 'Connected Successfully' : 'Connection Failed'} theme={result.success ? 'success' : 'error'}>
+                {result.message}
+              </Alert>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="p-6">
+          <h3 className="text-lg font-medium mb-4" style={{ color: 'var(--ink-gray-8)' }}>Quick Actions</h3>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline"><FeatherIcon name="user-plus" className="w-4 h-4 mr-2" />Add Lead</Button>
+            <Button variant="outline"><FeatherIcon name="file-text" className="w-4 h-4 mr-2" />Generate Report</Button>
+            <Button variant="outline"><FeatherIcon name="settings" className="w-4 h-4 mr-2" />Settings</Button>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+"""
+
+LOGIN_REACT_BOILERPLATE = """import { useState } from 'react';
+import { Card, Button, FormLabel, TextInput, Alert, FeatherIcon, useAuth } from 'intrakore-ui';
+import { useNavigate } from 'react-router-dom';
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please enter username and password');
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const success = await login(email, password);
+      if (success) {
+        navigate('/');
+      } else {
+        setError('Invalid username or password');
+      }
+    } catch (err) {
+      setError(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--surface-gray-1)' }}>
+      <Card className="w-full max-w-md">
+        <div className="p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold" style={{ color: 'var(--ink-gray-9)' }}>Welcome Back</h2>
+            <p className="mt-2" style={{ color: 'var(--ink-gray-5)' }}>Sign in to your account</p>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <FormLabel label="Username" required />
+              <TextInput value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your username" size="md" block />
+            </div>
+            <div>
+              <FormLabel label="Password" required />
+              <TextInput type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" size="md" block />
+            </div>
+            <Button type="submit" variant="solid" theme="primary" block loading={loading}>
+              <FeatherIcon name="log-in" className="w-4 h-4 mr-2" />Sign In
+            </Button>
+          </form>
+          {error && (
+            <div className="mt-4">
+              <Alert theme="error" size="sm">{error}</Alert>
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+}
+"""
+
+# Also add REACT_MAIN_JSX_BOILERPLATE for the entry point
+REACT_MAIN_JSX_BOILERPLATE = """import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+"""
+
 APP_VUE_BOILERPLATE = """<template>
   <div class="min-h-screen" :style="{ backgroundColor: 'var(--surface-gray-1)' }">
     <!-- Navigation Bar -->
