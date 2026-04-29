@@ -289,5 +289,3 @@ export default {
 		login_jsx = views_dir / "Login.jsx"
 		create_file(home_jsx, HOME_REACT_BOILERPLATE)
 		create_file(login_jsx, LOGIN_REACT_BOILERPLATE)
-
-	 
