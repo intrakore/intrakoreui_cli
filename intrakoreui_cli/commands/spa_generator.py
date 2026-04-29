@@ -257,5 +257,37 @@ export default {
 			f.write(boilerplate)
 
 	def create_react_files(self):
-		app_react = self.spa_path / ("src/App.tsx" if self.use_typescript else "src/App.jsx")
+		# Create App.jsx
+		app_react = self.spa_path / "src/App.jsx"
 		create_file(app_react, APP_REACT_BOILERPLATE)
+		
+		# Create main.jsx entry point
+		main_jsx = self.spa_path / "src/main.jsx"
+		create_file(main_jsx, REACT_MAIN_JSX_BOILERPLATE)
+		
+		# Create index.css with embedded tokens + Tailwind
+		index_css = self.spa_path / "src/index.css"
+		create_file(index_css, INDEX_CSS_BOILERPLATE_REACT)  # Use the new combined version
+		
+		# Create App.css (optional, can be empty or minimal)
+		app_css = self.spa_path / "src/App.css"
+		app_css_content = """/* App-specific styles */
+	#root {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	text-align: center;
+	}
+	"""
+		create_file(app_css, app_css_content)
+		
+		# Create views directory and files
+		views_dir = self.spa_path / "src/views"
+		views_dir.mkdir(exist_ok=True)
+		
+		home_jsx = views_dir / "Home.jsx"
+		login_jsx = views_dir / "Login.jsx"
+		create_file(home_jsx, HOME_REACT_BOILERPLATE)
+		create_file(login_jsx, LOGIN_REACT_BOILERPLATE)
+
+	 
